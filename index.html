@@ -1,0 +1,402 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PaipeTech | Electronics Store</title>
+<style>
+:root {
+  --bg:#080b12;
+  --panel:#111725;
+  --blue:#168cff;
+  --purple:#9664ff;
+  --white:#f4f7ff;
+  --muted:#9aa8bd;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--white);
+}
+button,input { font:inherit; }
+button { cursor:pointer; }
+header {
+  position:sticky;top:0;z-index:10;
+  background:#080b12ee;
+  border-bottom:1px solid #26334a;
+  padding:15px 6%;
+  display:flex;align-items:center;
+  justify-content:space-between;gap:12px;
+  backdrop-filter:blur(12px);
+}
+.logo { font-size:23px;font-weight:900; }
+.logo span { color:var(--blue); }
+nav { display:flex;gap:20px; }
+nav a { color:var(--muted);text-decoration:none;font-size:14px; }
+.cart-btn,.primary {
+  background:linear-gradient(110deg,var(--blue),var(--purple));
+  border:0;color:white;padding:12px 18px;
+  border-radius:10px;font-weight:bold;
+}
+.hero {
+  padding:85px 7% 75px;
+  background:radial-gradient(ellipse at 85% 30%,#183c7555,transparent 45%),
+  radial-gradient(ellipse at 15% 90%,#59328b33,transparent 45%);
+}
+.tag {
+  color:#65b7ff;font-size:12px;
+  letter-spacing:3px;font-weight:bold;
+}
+h1 { font-size:clamp(38px,7vw,66px);line-height:1.08;margin:20px 0; }
+h1 span {
+  background:linear-gradient(90deg,#31aaff,#a47aff);
+  background-clip:text;color:transparent;
+}
+.hero p { color:var(--muted);max-width:510px;line-height:1.8; }
+.hero .primary { display:inline-block;margin-top:18px;text-decoration:none; }
+.section { padding:55px 6%; }
+.section-heading {
+  display:flex;justify-content:space-between;
+  align-items:center;gap:15px;flex-wrap:wrap;
+}
+.section h2 { font-size:28px;margin:0 0 10px; }
+.muted { color:var(--muted);font-size:14px; }
+.search {
+  width:100%;max-width:290px;padding:12px 14px;
+  border-radius:10px;border:1px solid #28364c;
+  background:var(--panel);color:white;
+}
+.filters { display:flex;gap:9px;flex-wrap:wrap;margin:25px 0; }
+.filter {
+  padding:10px 15px;border-radius:30px;
+  background:var(--panel);border:1px solid #28364c;
+  color:var(--muted);
+}
+.filter.active { background:#153e68;color:white;border-color:var(--blue); }
+.grid {
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:18px;
+}
+.card {
+  background:var(--panel);border:1px solid #253148;
+  border-radius:16px;overflow:hidden;transition:.2s;
+}
+.card:hover { transform:translateY(-4px);border-color:var(--blue); }
+.product-image {
+  height:175px;background:linear-gradient(135deg,#172b49,#29204b);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.product-image img { width:100%;height:100%;object-fit:cover; }
+.product-art { font-size:65px;filter:drop-shadow(0 8px 15px #0008); }
+.card-body { padding:17px; }
+.category { color:#62b5ff;font-size:11px;text-transform:uppercase;letter-spacing:1px; }
+.card h3 { margin:9px 0;font-size:17px; }
+.card p { color:var(--muted);font-size:13px;line-height:1.5;min-height:38px; }
+.price { font-weight:bold;font-size:18px;margin:15px 0; }
+.add-btn {
+  width:100%;padding:11px;border-radius:9px;
+  background:#152c49;border:1px solid #2865a4;color:white;
+}
+.add-btn:hover { background:#1b4c7d; }
+.empty {
+  grid-column:1/-1;text-align:center;
+  padding:35px;color:var(--muted);
+}
+.benefits {
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:15px;margin-top:30px;
+}
+.benefit {
+  background:var(--panel);border:1px solid #253148;
+  border-radius:14px;padding:23px;
+}
+.benefit b { display:block;margin:10px 0; }
+.benefit p { color:var(--muted);font-size:13px;line-height:1.6; }
+footer {
+  padding:35px 6%;border-top:1px solid #253148;
+  color:var(--muted);font-size:13px;
+  display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;
+}
+footer strong { color:white; }
+.drawer {
+  position:fixed;right:0;top:0;z-index:30;
+  width:min(390px,100%);height:100%;
+  background:#101725;padding:24px;
+  transform:translateX(105%);transition:.25s;
+  overflow:auto;box-shadow:0 0 50px #0009;
+}
+.drawer.open { transform:translateX(0); }
+.backdrop {
+  position:fixed;inset:0;background:#0009;z-index:20;
+  display:none;
+}
+.backdrop.show { display:block; }
+.drawer-head { display:flex;justify-content:space-between;align-items:center; }
+.drawer-head button { background:none;border:0;color:white;font-size:25px; }
+.cart-item {
+  display:flex;justify-content:space-between;gap:10px;
+  border-bottom:1px solid #29364a;padding:15px 0;
+}
+.cart-item button { background:none;color:#ff7777;border:0; }
+.checkout { width:100%;margin-top:20px; }
+@media(max-width:850px) {
+  .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  nav { display:none; }
+}
+@media(max-width:480px) {
+  header { padding:13px 4%; }
+  .logo { font-size:19px; }
+  .hero { padding:65px 6%; }
+  .section { padding:40px 5%; }
+  .grid { gap:11px; }
+  .product-image { height:135px; }
+  .card-body { padding:12px; }
+  .benefits { grid-template-columns:1fr; }
+  .search { max-width:100%; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">PAIPE<span>TECH</span></div>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#shop">Products</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <button class="cart-btn" onclick="openCart()">
+    Cart (<span id="cart-count">0</span>)
+  </button>
+</header>
+
+<main>
+<section class="hero" id="home">
+  <div class="tag">TECHNOLOGY • INNOVATION • QUALITY</div>
+  <h1>Upgrade Your World<br>With <span>PaipeTech.</span></h1>
+  <p>
+    Discover electronics and smart accessories designed
+    to keep you connected, productive and ahead of the future.
+  </p>
+  <a class="primary" href="#shop">Explore Products →</a>
+</section>
+
+<section class="section" id="shop">
+  <div class="section-heading">
+    <div>
+      <h2>Explore Our Products</h2>
+      <div class="muted">Find the technology you need.</div>
+    </div>
+    <input class="search" id="search" placeholder="Search products..."
+    oninput="renderProducts()">
+  </div>
+
+  <div class="filters" id="filters"></div>
+  <div class="grid" id="products"></div>
+
+  <div class="muted" style="margin-top:18px">
+    Prices and availability are confirmed when ordering.
+  </div>
+</section>
+
+<section class="section" id="about">
+  <h2>Why Choose PaipeTech?</h2>
+  <div class="benefits">
+    <div class="benefit">
+      <div>⚡</div><b>Modern Technology</b>
+      <p>Explore electronics and accessories for everyday life.</p>
+    </div>
+    <div class="benefit">
+      <div>💬</div><b>Easy Ordering</b>
+      <p>Contact us directly to ask questions and place orders.</p>
+    </div>
+    <div class="benefit">
+      <div>🤝</div><b>Customer Focus</b>
+      <p>We're here to help you find the right technology.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="contact">
+  <h2>Ready to Upgrade?</h2>
+  <p class="muted">Contact PaipeTech for product information and orders.</p>
+  <button class="primary" onclick="contactWhatsApp()">Chat With Us on WhatsApp</button>
+</section>
+</main>
+
+<footer>
+  <strong>PAIPETECH © 2026</strong>
+  <span>Technology for a smarter future.</span>
+</footer>
+
+<div class="backdrop" id="backdrop" onclick="closeCart()"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h2>Your Shopping Cart</h2>
+    <button onclick="closeCart()">×</button>
+  </div>
+  <div id="cart-items"></div>
+  <div id="cart-total" style="margin-top:20px;font-weight:bold"></div>
+  <button class="primary checkout" onclick="checkout()">
+    Order on WhatsApp
+  </button>
+</aside>
+
+<script>
+// Replace this with your WhatsApp number.
+// Mozambique format: 258 followed by your number, without the first 0.
+const WHATSAPP_NUMBER = "258XXXXXXXXX";
+
+// Replace these examples with your real products and prices.
+const products = [
+  {
+    id:1, name:"Your Smartphone", category:"Phones",
+    price:null, icon:"📱", image:"",
+    description:"Add the model, storage and product details."
+  },
+  {
+    id:2, name:"Your Laptop", category:"Computers",
+    price:null, icon:"💻", image:"",
+    description:"Add the model, specifications and details."
+  },
+  {
+    id:3, name:"Your Headphones", category:"Audio",
+    price:null, icon:"🎧", image:"",
+    description:"Add the brand and product features."
+  },
+  {
+    id:4, name:"Your Smartwatch", category:"Accessories",
+    price:null, icon:"⌚", image:"",
+    description:"Add the model and product details."
+  }
+];
+
+let activeCategory = "All";
+let cart = [];
+
+const categories = ["All","Phones","Computers","Audio","Accessories"];
+
+function renderFilters() {
+  document.getElementById("filters").innerHTML =
+    categories.map(c => `
+      <button class="filter ${activeCategory===c?'active':''}"
+      onclick="setCategory('${c}')">${c}</button>
+    `).join("");
+}
+
+function setCategory(c) {
+  activeCategory = c;
+  renderFilters();
+  renderProducts();
+}
+
+function renderProducts() {
+  const query = document.getElementById("search").value.toLowerCase();
+  const list = products.filter(p =>
+    (activeCategory==="All" || p.category===activeCategory) &&
+    (p.name.toLowerCase().includes(query) ||
+     p.category.toLowerCase().includes(query))
+  );
+
+  document.getElementById("products").innerHTML = list.length ?
+    list.map(p => `
+      <article class="card">
+        <div class="product-image">
+          ${p.image
+            ? `<img src="${p.image}" alt="${p.name}">`
+            : `<div class="product-art">${p.icon}</div>`}
+        </div>
+        <div class="card-body">
+          <div class="category">${p.category}</div>
+          <h3>${p.name}</h3>
+          <p>${p.description}</p>
+          <div class="price">
+            ${p.price===null ? "Price on request" :
+            p.price.toLocaleString("en-US")+" MT"}
+          </div>
+          <button class="add-btn" onclick="addToCart(${p.id})">
+            Add to Cart
+          </button>
+        </div>
+      </article>
+    `).join("") :
+    `<div class="empty">No products found.</div>`;
+}
+
+function addToCart(id) {
+  const p = products.find(x => x.id===id);
+  const item = cart.find(x => x.id===id);
+  if(item) item.qty++;
+  else cart.push({...p,qty:1});
+  updateCart();
+  openCart();
+}
+
+function updateCart() {
+  document.getElementById("cart-count").textContent =
+    cart.reduce((n,p)=>n+p.qty,0);
+
+  document.getElementById("cart-items").innerHTML = cart.length ?
+    cart.map(p=>`
+      <div class="cart-item">
+        <div><b>${p.name}</b><br>
+        <small>${p.qty} × ${p.price===null?"Price on request":p.price+" MT"}</small>
+        </div>
+        <button onclick="removeItem(${p.id})">Remove</button>
+      </div>
+    `).join("") :
+    `<p class="muted">Your cart is empty.</p>`;
+
+  const total = cart.reduce((n,p)=>n+(p.price||0)*p.qty,0);
+  const allPriced = cart.every(p=>p.price!==null);
+  document.getElementById("cart-total").textContent =
+    allPriced ? "Total: "+total.toLocaleString("en-US")+" MT" :
+    "Final price confirmed on WhatsApp.";
+}
+
+function removeItem(id) {
+  cart = cart.filter(p=>p.id!==id);
+  updateCart();
+}
+
+function openCart() {
+  document.getElementById("drawer").classList.add("open");
+  document.getElementById("backdrop").classList.add("show");
+}
+function closeCart() {
+  document.getElementById("drawer").classList.remove("open");
+  document.getElementById("backdrop").classList.remove("show");
+}
+
+function contactWhatsApp(message="Hello PaipeTech! I'd like to know more about your products.") {
+  if(WHATSAPP_NUMBER.includes("X")) {
+    alert("Please add your WhatsApp number in the website code first.");
+    return;
+  }
+  window.open("https://wa.me/"+WHATSAPP_NUMBER+
+    "?text="+encodeURIComponent(message),"_blank");
+}
+
+function checkout() {
+  if(!cart.length) {
+    alert("Your cart is empty.");
+    return;
+  }
+  const message = "Hello PaipeTech! I would like to order:\n"+
+    cart.map(p=>p.name+" x "+p.qty).join("\n")+
+    "\nPlease confirm prices and availability.";
+  contactWhatsApp(message);
+}
+
+renderFilters();
+renderProducts();
+updateCart();
+</script>
+</body>
+  </html>
+    
